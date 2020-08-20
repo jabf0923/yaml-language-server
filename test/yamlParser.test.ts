@@ -17,6 +17,29 @@ suite('YAML parser', () => {
       assert(parsedDocument.documents.length === 1, 'No document has been created when there is a comment');
     });
 
+    it('parse single document with --- at the start of the file', () => {
+      const parsedDocument = parse('---\n# a comment\ntest: test');
+      assert(
+        parsedDocument.documents.length === 1,
+        `A single document should be available but there are ${parsedDocument.documents.length}`
+      );
+      assert(parsedDocument.documents[0].lineComments.length === 1);
+      assert(parsedDocument.documents[0].lineComments[0] === '# a comment');
+    });
+
+    it('parse multi document with --- at the start of the file', () => {
+      const parsedDocument = parse('---\n# a comment\ntest: test\n...\n---\n# second document\ntest2: test2');
+      assert(
+        parsedDocument.documents.length === 2,
+        `two documents should be available but there are ${parsedDocument.documents.length}`
+      );
+      assert(parsedDocument.documents[0].lineComments.length === 1);
+      assert(parsedDocument.documents[0].lineComments[0] === '# a comment');
+
+      assert(parsedDocument.documents[1].lineComments.length === 1);
+      assert(parsedDocument.documents[1].lineComments[0] === '# second document');
+    });
+
     it('parse single document', () => {
       const parsedDocument = parse('test');
       assert(

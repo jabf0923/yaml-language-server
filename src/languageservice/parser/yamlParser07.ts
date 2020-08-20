@@ -118,11 +118,11 @@ export function parse(text: string, customTags = []): YAMLDocument {
 function parseLineComments(text: string, yamlDocs: SingleYAMLDocument[]): void {
   const lines = text.split(/[\r\n]+/g);
   let yamlDocCount = 0;
-  lines.forEach((line) => {
+  lines.forEach((line, index) => {
     if (line.startsWith(YAML_DIRECTIVE_PREFIX) && yamlDocCount === 0) {
       yamlDocCount--;
     }
-    if (line === YAML_DATA_INSTANCE_SEPARATOR) {
+    if (line === YAML_DATA_INSTANCE_SEPARATOR && index !== 0) {
       yamlDocCount++;
     }
     if (line.startsWith(YAML_COMMENT_PREFIX)) {
